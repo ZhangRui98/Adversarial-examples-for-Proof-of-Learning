@@ -60,10 +60,19 @@ If you have any questions or suggestions, feel free to raise an issue or send me
 ### Citing this work
 If you use this repository for academic research, you are highly encouraged (though not required) to cite our paper:
 ```
-@article{zhang2021adversarial,
-  title={" Adversarial Examples" for Proof-of-Learning},
-  author={Zhang, Rui and Liu, Jian and Ding, Yuan and Wu, Qingbiao and Ren, Kui},
-  journal={arXiv preprint arXiv:2108.09454},
-  year={2021}
+@INPROCEEDINGS {,
+author = {R. Zhang and J. Liu and Y. Ding and Z. Wang and Q. Wu and K. Ren},
+booktitle = {2022 2022 IEEE Symposium on Security and Privacy (SP) (SP)},
+title = {"Adversarial Examples" for Proof-of-Learning},
+year = {2022},
+volume = {},
+issn = {2375-1207},
+pages = {1542-1542},
+keywords = {},
+doi = {10.1109/SP46214.2022.00113},
+url = {https://doi.ieeecomputersociety.org/10.1109/SP46214.2022.00113},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month = {may}
 }
 ```
