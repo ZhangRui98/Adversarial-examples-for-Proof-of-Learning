@@ -9,15 +9,11 @@ In 2021 IEEE Symposium on Security and Privacy (SP), Jia et al. published “[Pr
 | *“However, optimizing for the data points that lead to such state transitions is a second order non-convex problem in the setting of deep learning, which is computationally costly, and can potentially exceed the cost of training. ”* |
 | ------------------------------------------------------------ |
 
-We agree that computing a second-order non-convex is computationally costly. However, one key point in our attack is that “the number of training steps $T’$ in a PoL spoof is NOT required to be identical to the number of training steps $T$ in a PoL proof”, which is consistent with the assumptions made by the PoL paper (cf. “stochastic spoofling” in Section IV.A of their paper). Note that our attack requires computing derivative of the $l_2-norm$ of the first-order derivative for $T’$ times, whereas training the model requires computing first-order derivative for $T$ times. **Therefore, we could choose a $T’$ that is smaller than $T$ to make sure our attack is less costly than training the model.**
+One key point in our attack is that “the number of training steps $T’$ in a PoL spoof is NOT required to be identical to the number of training steps $T$ in a PoL proof”, which is consistent with the assumptions made by the PoL paper (cf. “stochastic spoofling” in Section IV.A of their paper). Note that our attack requires generating adversaial examples for *T’* times*,* whereas training the model requires computing the gradients for $T’$ times, whereas training the model requires computing first-order derivative for $T$ times. **Therefore, we could choose a $T’$ that is smaller than $T$ to make sure our attack is less costly than training the model.**
 
+Denote the cost of training by $O(T\times c)$, where $c$ is the number of parameters. The main cost of our attack is computing derivative of $||dw||_2$ with respect to the input  for $T'$ times. Therefore, the cost of our attack (Attack I and Attack II) can be denoted by $O(T’\times(c+d)\times N),$ where *d* is the input dimensions and *N* is the number of iterations needed to create an adversarial example. As a result, we only need to set *T’* to be smaller than $O(\frac{T\times c}{(c+d)\times N}).$ Our experiments show that *N* can be as small as 10 in Attack II.
 
-
-Denote the cost of training by $O(T\times c)$, where $c$ is the number of parameters; the cost of our attack (Attack I and Attack II) is $O(T’\times(c+d)\times N),$ where *d* is the input dimensions and *N* is the number of iterations needed to create an adversarial example. Therefore, we only need to set *T’* to be smaller than $O(\frac{T\times c}{(c+d)\times N}).$ Our experiments show that *N* can be as small as 10 in Attack II.
-
- 
-
-However, we still want to make $T’$ as large as possible to make the spoof indistinguishable from the proof. Our optimized attack (i.e., Attack III) only requires computing derivative of the $l_2-norm$ of the first-order derivative for $\frac{T’}{k}$ times, where $k$ is the number of batches in a checkpointing interval. As a result, we only need to set $T’$ to be smaller than $O(\frac{T\times k\times c}{(c+d)\times N}).$ Our experimental results show that we can have a $T’$ that is comparable to $T$ with a spoofing time that is still much smaller than training  (cf. Figures 5 6 7 in our paper). 
+However, we still want to make $T’$ as large as possible to make the spoof indistinguishable from the proof. Our optimized attack (i.e., Attack III) only requires computing derivative of $||dw||_2$ with respect to the input $x$ for $\frac{T’}{k}$ times, where $k$ is the number of batches in a checkpointing interval. As a result, we only need to set $T’$ to be smaller than $O(\frac{T\times k\times c}{(c+d)\times N}).$ Our experimental results show that we can have a $T’$ that is comparable to $T$ with a spoofing time that is still much smaller than training  (cf. Figures 5 6 7 in our paper). 
 
 ## About the discrepancy in experimental results
 
@@ -42,8 +38,6 @@ Our open-sourced code can be found [here](https://github.com/ZhangRui98/Adversar
 | ------------------------------------------------------------ |
 
 First of all, **it is the original PoL paper that assumes the adversary has the ability to control the checking pointing interval.** In Section IV.A of the PoL paper, they wrote: “*We consider the following scenarios for spoofing…(b) Stochastic Spoofling: A* (which is the attacker) *aims to create a valid PoL for fw_T, but this may not be the same as T’s PoL*”.That means the attacker is allowed to come up with a PoL spoof that is totally different from the PoL proof, including the checkpointing interval.
-
- 
 
 Secondly, in the original PoL paper (Section VI.C, tagged paragraph-4), they wrote: “*Common practice when training DNNs is to checkpoint at every epoch (i.e., k=S) … In particular, if the prover only utilizes the checkpoints saved roughly at every epoch (k≈S), they can still… In Figures 1, 2 and Table I for the CIFAR-10 dataset, we observe that using k=S outperforms creating PoL with the deterministic operations...*” **All these sentences in the original PoL paper implicitly suggest to set “k = S = 390”**. In our experiments, we set k=100, which is smaller than 390.
 
